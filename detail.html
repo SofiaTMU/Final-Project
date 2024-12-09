@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Dragon Details</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #ff0000; 
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #ff0000;
+        }
+        h2 {
+            font-size: 2em;
+            color: #ff0000;
+        }
+        img {
+            width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dragon Details</h1>
+    <div id="dragon-detail">
+        <!-- Dragon details will be displayed here -->
+    </div>
+
+    <script>
+        // Get the dragon ID from the URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var dragonId = parseInt(urlParams.get('id'), 10);  // Get 'id' from the URL
+        var detailDiv = document.getElementById('dragon-detail');
+
+        // Fetch dragon details from the API
+        fetch("http://157.230.214.215/api/GOT_Dragons")
+            .then(response => response.json())
+            .then(data => {
+                var dragon = data.find(d => d.id === dragonId); // Find dragon by id
+
+                if (dragon) {
+                    // Create and display dragon details dynamically
+                    var img = document.createElement('img');
+                    img.src = dragon.image;
+                    img.alt = dragon.name;
+
+                    var h2 = document.createElement('h2');
+                    h2.textContent = dragon.name;
+
+                    var riderP = document.createElement('p');
+                    riderP.innerHTML = "<strong>Rider:</strong> " + dragon.rider;
+
+                    var colorP = document.createElement('p');
+                    colorP.innerHTML = "<strong>Color:</strong> " + dragon.color;
+
+                    var battlesP = document.createElement('p');
+                    battlesP.innerHTML = "<strong>Battles:</strong> " + dragon.battles;
+
+                    var statusP = document.createElement('p');
+                    statusP.innerHTML = "<strong>Status:</strong> " + dragon.status;
+
+                    detailDiv.appendChild(img);
+                    detailDiv.appendChild(h2);
+                    detailDiv.appendChild(riderP);
+                    detailDiv.appendChild(colorP);
+                    detailDiv.appendChild(battlesP);
+                    detailDiv.appendChild(statusP);
+                } else {
+                    // If no dragon with the given id exists
+                    var notFoundP = document.createElement('p');
+                    notFoundP.style.color = '#ff0000';
+                    notFoundP.textContent = "Dragon not found!";
+                    detailDiv.appendChild(notFoundP);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching dragon data:", error);
+                var errorP = document.createElement('p');
+                errorP.style.color = '#ff0000';
+                errorP.textContent = "Error loading dragon details!";
+                detailDiv.appendChild(errorP);
+            });
+    </script>
+</body>
+</html>
